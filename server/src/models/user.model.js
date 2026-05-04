@@ -19,10 +19,12 @@ const userSchema = new Schema({
         enum: ["student", "admin"],
         default: "student",
     },
-    classId: {
-        type: Schema.Types.ObjectId,
-        ref: "Class",
-    },
+    classes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Class"
+        }
+    ],
     status: {
         type: String,
         enum: ["pending", "approved"],

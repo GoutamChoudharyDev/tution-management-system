@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 // protected routes middleware for users
-const protected = (req, res, next) => {
+const isAuth = (req, res, next) => {
     try {
         // get token
         const token = req.cookies?.accessToken;
@@ -42,6 +42,6 @@ const isAdmin = (req, res, next) => {
 
 // exports
 export {
-    protected,
+    isAuth,
     isAdmin
 }

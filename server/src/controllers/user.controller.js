@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../utils/tokens.utils.js";
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 // Cookie options
 const isProd = process.env.NODE_ENV === "production";
@@ -17,7 +17,7 @@ const cookieOptions = {
 const userRegister = async (req, res) => {
     try {
         // taking data from frontend(req.body)
-        const { name, email, password, classId } = req.body;
+        const { name, email, password } = req.body;
 
         // validation
         if (!name || !email || !password) {
@@ -43,7 +43,6 @@ const userRegister = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            classId
         })
 
         // safe user object
@@ -51,7 +50,6 @@ const userRegister = async (req, res) => {
             id: user._id,
             name: user.name,
             email: user.email,
-            classId: user.classId,
             status: user.status,
             role: user.role
         }
@@ -125,7 +123,6 @@ const userLogin = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
-            classId: user.classId,
         }
 
         // return response
@@ -181,7 +178,11 @@ const refreshAccessToken = async (req, res) => {
         // return response
         return res.status(200).json({
             message: "Access token refreshed",
-            user: decoded
+            user: {
+                id: user._id,
+                name: user.name,
+                role: user.role
+            }
         })
     } catch (error) {
         res.status(403).json({
