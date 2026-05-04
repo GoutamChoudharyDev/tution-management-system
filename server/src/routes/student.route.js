@@ -4,7 +4,7 @@ import { getMyClass, getMyProfile } from "../controllers/student.controller.js";
 
 const router = Router();
 
-// Student APIs
+//! Student APIs
 router.get("/me", isAuth, getMyProfile);
 router.get("/my-class", isAuth, getMyClass);
 
