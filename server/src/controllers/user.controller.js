@@ -65,6 +65,7 @@ const userRegister = async (req, res) => {
     }
 }
 
+// login controller
 const userLogin = async (req, res) => {
     try {
         // taking data from frontend(req.body)
@@ -207,10 +208,38 @@ const userLogout = async (req, res) => {
     }
 }
 
+// get me controller
+const getMe = async (req, res) => {
+    try {
+        // get user from req (set by auth middleware)
+        const userId = req.user.id;
+
+        // find user
+        const user = await User.findById(userId).select("-password");
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+
+        // return response
+        return res.status(200).json({
+            message: "User data fetched successfully",
+            user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
 // exports
 export {
     userRegister,
     userLogin,
     refreshAccessToken,
-    userLogout
+    userLogout,
+    getMe
 }
