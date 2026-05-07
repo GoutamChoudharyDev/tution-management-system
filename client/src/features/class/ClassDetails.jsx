@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { getSingleClassApi, addStudentToClassApi, removeStudentToClassApi } from './class.api';
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { getSingleClassApi, addStudentToClassApi, removeStudentToClassApi, deleteClassApi } from './class.api';
 import { getAllUsersApi } from '../admin/admin.api';
 import { toast } from "react-toastify";
 
@@ -18,9 +18,11 @@ const ClassDetails = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   //! get id from params
   const { id } = useParams();
+  const navigate = useNavigate();
 
   //! useEffect
   useEffect(() => {
@@ -112,138 +114,223 @@ const ClassDetails = () => {
     !classDetails.students.some(student => student._id === user._id)
   );
 
+  //! Handle delete class
+  const handleDeleteClass = async () => {
+    if (!window.confirm(`Are you sure you want to delete "${classDetails.name}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      await deleteClassApi(id);
+      toast.success("Class deleted successfully");
+      navigate("/admin/classes");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete class");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className="max-w-6xl mx-auto space-y-8 pb-8">
+      <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
         <div>
-          <p className="text-gray-600 mt-1">Review class information and enrolled students.</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-emerald-600">Class Details</p>
+          <h1 className="mt-3 text-3xl font-semibold text-slate-900">{classDetails.name || 'Class Details'}</h1>
+          <p className="mt-2 text-sm text-slate-500">Review the class overview, enrolled students, and available actions.</p>
         </div>
-        <Link
-          to="/admin/classes"
-          className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Back to Classes
-        </Link>
+
+        <div className="flex flex-wrap gap-3">
+          <Link
+            to={`/admin/classes/edit/${id}`}
+            className="inline-flex items-center justify-center rounded-2xl border border-black/10 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-900 transition hover:border-emerald-500 hover:text-slate-900"
+          >
+            Edit Class
+          </Link>
+          <button
+            onClick={handleDeleteClass}
+            disabled={deleting}
+            className="inline-flex items-center justify-center rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
+          >
+            {deleting ? 'Deleting...' : 'Delete Class'}
+          </button>
+          <Link
+            to="/admin/classes"
+            className="inline-flex items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:text-slate-900"
+          >
+            Back to Classes
+          </Link>
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Overview</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-              <span className="font-medium text-gray-500">Class Name</span>
-              <span className="text-gray-900">{classDetails.name}</span>
+      <div className="grid gap-6 xl:grid-cols-[1.75fr_1fr]">
+        <section className="rounded-3xl border border-black/20 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-500">Overview</p>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-900">{classDetails.subject || 'General Subject'}</h2>
             </div>
-            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-              <span className="font-medium text-gray-500">Subject</span>
-              <span className="text-gray-900">{classDetails.subject}</span>
+            <div className="rounded-3xl bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
+              {classDetails.students?.length || 0} enrolled
             </div>
-            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-              <span className="font-medium text-gray-500">Created By</span>
-              <span className="text-gray-900">{classDetails.createdBy?.name}</span>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-3xl border border-black/10 bg-slate-50 p-5">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Class Name</p>
+              <p className="mt-3 text-lg font-semibold text-slate-900">{classDetails.name || 'N/A'}</p>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="font-medium text-gray-500">Created At</span>
-              <span className="text-gray-900">
-                {new Date(classDetails.createdAt).toLocaleDateString("en-GB")}
-              </span>
+            <div className="rounded-3xl border border-black/10 bg-slate-50 p-5">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Subject</p>
+              <p className="mt-3 text-lg font-semibold text-slate-900">{classDetails.subject || 'N/A'}</p>
             </div>
+            <div className="rounded-3xl border border-black/10 bg-slate-50 p-5">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Instructor</p>
+              <p className="mt-3 text-lg font-semibold text-slate-900">{classDetails.createdBy?.name || 'Unknown'}</p>
+            </div>
+            <div className="rounded-3xl border border-black/10 bg-slate-50 p-5">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Created At</p>
+              <p className="mt-3 text-lg font-semibold text-slate-900">{classDetails.createdAt ? new Date(classDetails.createdAt).toLocaleDateString('en-GB') : 'N/A'}</p>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-3xl border border-black/10 bg-emerald-50 p-5 text-sm text-slate-700">
+            <p className="font-semibold text-slate-900">Class Summary</p>
+            <p className="mt-2 text-slate-600">This class is assigned to the selected subject and managed by the assigned instructor. Add or remove students as needed from the enrollment section below.</p>
           </div>
         </section>
 
-        <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Actions</h2>
-          <div className="space-y-3">
+        <section className="rounded-3xl border border-black/20 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold text-slate-500">Class Actions</p>
+              <p className="mt-2 text-sm text-slate-500">Quick actions for this class.</p>
+            </div>
+            <div className="rounded-3xl bg-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Focus</div>
+          </div>
+
+          <div className="mt-6 space-y-4">
             <button
               type="button"
               onClick={() => setShowAddModal(true)}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+              className="w-full rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
               disabled={loading}
             >
               Add Student
             </button>
-            <p className="text-xs text-gray-500">Select a student to add to this class</p>
+            <div className="rounded-3xl border border-black/10 bg-slate-50 p-4 text-sm text-slate-600">
+              <p className="font-semibold text-slate-900">Tip</p>
+              <p className="mt-2">Only approved students can be added to this class. Remove inactive students to keep enrollment accurate.</p>
+            </div>
           </div>
         </section>
       </div>
 
-      <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Enrolled Students</h2>
-          <span className="text-sm text-gray-500">{classDetails.students.length} students</span>
+      <section className="rounded-3xl border border-black/20 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-900">Enrolled Students</h2>
+            <p className="mt-2 text-sm text-slate-500">Manage who is currently enrolled in this class.</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600">{classDetails.students?.length || 0} students</div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+
+        <div className="mt-6 overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-200">
+            <thead className="bg-slate-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Student</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Status</th>
+                <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {classDetails.students.map((student) => (
-                <tr key={student._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{student.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{student.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">{student.status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button
-                      onClick={() => handleRemoveStudent(student._id)}
-                      className="text-red-600 hover:text-red-900 disabled:opacity-50"
-                      disabled={loading}
-                    >
-                      Remove
-                    </button>
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {classDetails.students.length ? (
+                classDetails.students.map((student) => (
+                  <tr key={student._id} className="hover:bg-slate-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900">{student.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{student.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-emerald-600">{student.status}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => handleRemoveStudent(student._id)}
+                        disabled={loading}
+                        className="rounded-2xl border border-red-200 bg-red-50 px-3 py-2 text-red-700 transition hover:border-red-400 hover:bg-red-100 disabled:opacity-50"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="px-6 py-12 text-center text-sm text-slate-500">
+                    No students are currently enrolled in this class.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
       </section>
 
-      {/* Add Student Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Add Student to Class</h3>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Student
-              </label>
-              <select
-                value={selectedStudentId}
-                onChange={(e) => setSelectedStudentId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Choose a student...</option>
-                {availableStudents.map((student) => (
-                  <option key={student._id} value={student._id}>
-                    {student.name} ({student.email})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex justify-end space-x-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-semibold text-slate-900">Add Student to Class</h3>
+                <p className="mt-2 text-sm text-slate-500">Choose an approved student and add them to this class roster.</p>
+              </div>
               <button
                 onClick={() => {
-                  setShowAddModal(false);
-                  setSelectedStudentId("");
+                  setShowAddModal(false)
+                  setSelectedStudentId('')
                 }}
-                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                disabled={loading}
+                className="rounded-2xl border border-black/10 bg-slate-100 px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-200"
               >
-                Cancel
+                Close
               </button>
-              <button
-                onClick={handleAddStudent}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-                disabled={loading || !selectedStudentId}
-              >
-                {loading ? "Adding..." : "Add Student"}
-              </button>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-3">Select Student</label>
+                <select
+                  value={selectedStudentId}
+                  onChange={(e) => setSelectedStudentId(e.target.value)}
+                  className="w-full rounded-2xl border border-black/20 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                >
+                  <option value="">Choose a student...</option>
+                  {availableStudents.map((student) => (
+                    <option key={student._id} value={student._id}>
+                      {student.name} — {student.email}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button
+                  onClick={() => {
+                    setShowAddModal(false)
+                    setSelectedStudentId('')
+                  }}
+                  disabled={loading}
+                  className="w-full rounded-2xl border border-black/10 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddStudent}
+                  disabled={loading || !selectedStudentId}
+                  className="w-full rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+                >
+                  {loading ? 'Adding...' : 'Add Student'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

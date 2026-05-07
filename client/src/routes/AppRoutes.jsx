@@ -8,6 +8,7 @@ import StudentDashboard from '../pages/StudentDashboard'
 import ClassList from '../features/class/ClassList'
 import ClassDetails from '../features/class/ClassDetails'
 import CreateClass from '../features/class/CreateClass'
+import EditClass from '../features/class/EditClass'
 import UserManagement from '../features/admin/UserManagement'
 import AdminLayout from '../components/layout/AdminLayout'
 
@@ -43,6 +44,17 @@ const AppRoutes = () => {
                     <ProtectedRoute role="admin">
                         <AdminLayout>
                             <CreateClass />
+                        </AdminLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path='/admin/classes/edit/:id'
+                element={
+                    <ProtectedRoute role="admin">
+                        <AdminLayout>
+                            <EditClass />
                         </AdminLayout>
                     </ProtectedRoute>
                 }
