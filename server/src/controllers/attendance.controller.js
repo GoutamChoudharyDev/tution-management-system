@@ -54,7 +54,7 @@ const getClassAttendance = async (req, res) => {
 }
 
 // exports
-export { 
+export {
     markAttendance,
     getClassAttendance
 }

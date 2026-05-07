@@ -100,7 +100,7 @@ const deleteClass = async (req, res) => {
 // getAllClasses controller
 const getAllClasses = async (req, res) => {
     try {
-        const allClasses = await Class.find().sort({ createdAt: -1 });
+        const allClasses = await Class.find().populate("createdBy", "name email").sort({ createdAt: -1 });
 
         // respone
         return res.status(200).json({
@@ -122,7 +122,8 @@ const getSingleClass = async (req, res) => {
 
         const singleClass = await Class
             .findById(id)
-            .populate("createdBy", "name email");
+            .populate("createdBy", "name email")
+            .populate("students", "name email status");
 
         if (!singleClass) {
             return res.status(404).json({
@@ -183,7 +184,7 @@ const removeStudentToClass = async (req, res) => {
 
         // validation
         if (!studentId || !classId) {
-            return status(400).json({
+            return res.status(400).json({
                 message: "StudentId and ClassId required"
             })
         }
