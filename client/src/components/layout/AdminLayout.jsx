@@ -33,6 +33,11 @@ const AdminLayout = ({ children }) => {
       icon: '📚'
     },
     {
+      name: 'Attendance',
+      path: '/admin/attendance',
+      icon: '✓'
+    },
+    {
       name: 'User Management',
       path: '/admin/users',
       icon: '👥'
@@ -60,15 +65,13 @@ const AdminLayout = ({ children }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                  isActive
-                    ? 'bg-slate-100 text-slate-900 ring-1 ring-black/20 border border-emerald-500'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:border hover:border-emerald-500 hover:border-opacity-100'
-                }`}
+                className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-semibold transition-all duration-200 ${isActive
+                  ? 'bg-slate-100 text-slate-900 ring-1 ring-black/20 border border-emerald-500'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:border hover:border-emerald-500 hover:border-opacity-100'
+                  }`}
               >
-                <span className={`inline-flex h-9 w-9 items-center justify-center rounded-2xl text-lg ${
-                  isActive ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-indigo-500 group-hover:text-white'
-                }`}>
+                <span className={`inline-flex h-9 w-9 items-center justify-center rounded-2xl text-lg ${isActive ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-indigo-500 group-hover:text-white'
+                  }`}>
                   {item.icon}
                 </span>
                 <span>{item.name}</span>
@@ -136,15 +139,13 @@ const AdminLayout = ({ children }) => {
                   key={item.path}
                   to={item.path}
                   onClick={handleCloseSidebar}
-                  className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-semibold transition-all duration-200 ${
-                    isActive
-                      ? 'bg-slate-100 text-slate-900 ring-1 ring-black/20 border border-emerald-500'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:border hover:border-emerald-500 hover:border-opacity-100'
-                  }`}
+                  className={`group flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-semibold transition-all duration-200 ${isActive
+                    ? 'bg-slate-100 text-slate-900 ring-1 ring-black/20 border border-emerald-500'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:border hover:border-emerald-500 hover:border-opacity-100'
+                    }`}
                 >
-                  <span className={`inline-flex h-9 w-9 items-center justify-center rounded-2xl text-lg ${
-                    isActive ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-indigo-500 group-hover:text-white'
-                  }`}>
+                  <span className={`inline-flex h-9 w-9 items-center justify-center rounded-2xl text-lg ${isActive ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-indigo-500 group-hover:text-white'
+                    }`}>
                     {item.icon}
                   </span>
                   <span>{item.name}</span>

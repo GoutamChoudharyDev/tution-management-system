@@ -9,4 +9,5 @@ const router = Router();
 router.post("/mark", isAuth, isAdmin, markAttendance);
 router.get("/class/:classId", isAuth, isAdmin, getClassAttendance)
 router.get("/my", isAuth, getMyAttendance);
+
 export default router;

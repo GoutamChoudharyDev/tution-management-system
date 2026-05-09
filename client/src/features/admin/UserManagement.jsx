@@ -3,15 +3,13 @@ import { getAllUsersApi, approveUserApi } from './admin.api'
 import { toast } from 'react-toastify'
 
 const UserManagement = () => {
+  //! useStates 
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [approvingUserId, setApprovingUserId] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
+  //! Fetch all users when component mounts 
   const fetchUsers = async () => {
     try {
       setLoading(true)
@@ -24,6 +22,11 @@ const UserManagement = () => {
     }
   }
 
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  //! approve user function 
   const handleApproveUser = async (userId) => {
     try {
       setApprovingUserId(userId)

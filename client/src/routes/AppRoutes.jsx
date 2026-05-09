@@ -10,6 +10,8 @@ import ClassDetails from '../features/class/ClassDetails'
 import CreateClass from '../features/class/CreateClass'
 import EditClass from '../features/class/EditClass'
 import UserManagement from '../features/admin/UserManagement'
+import MarkAttendance from '../features/attendance/MarkAttendance'
+import StudentAttendance from '../features/attendance/StudentAttendance'
 import AdminLayout from '../components/layout/AdminLayout'
 
 const AppRoutes = () => {
@@ -89,6 +91,26 @@ const AppRoutes = () => {
                         <AdminLayout>
                             <UserManagement />
                         </AdminLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path='/admin/attendance'
+                element={
+                    <ProtectedRoute role="admin">
+                        <AdminLayout>
+                            <MarkAttendance />
+                        </AdminLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path='/student/attendance'
+                element={
+                    <ProtectedRoute role="student">
+                        <StudentAttendance />
                     </ProtectedRoute>
                 }
             />
