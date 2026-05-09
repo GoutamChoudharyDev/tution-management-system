@@ -11,6 +11,7 @@ import CreateClass from '../features/class/CreateClass'
 import EditClass from '../features/class/EditClass'
 import UserManagement from '../features/admin/UserManagement'
 import MarkAttendance from '../features/attendance/MarkAttendance'
+import ViewClassAttendance from '../features/attendance/ViewClassAttendance'
 import StudentAttendance from '../features/attendance/StudentAttendance'
 import AdminLayout from '../components/layout/AdminLayout'
 
@@ -101,6 +102,17 @@ const AppRoutes = () => {
                     <ProtectedRoute role="admin">
                         <AdminLayout>
                             <MarkAttendance />
+                        </AdminLayout>
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path='/admin/attendance/class/:id'
+                element={
+                    <ProtectedRoute role="admin">
+                        <AdminLayout>
+                            <ViewClassAttendance />
                         </AdminLayout>
                     </ProtectedRoute>
                 }

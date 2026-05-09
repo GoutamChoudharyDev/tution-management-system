@@ -214,7 +214,7 @@ const MarkAttendance = () => {
                 <button
                     onClick={handleCancel}
                     type="button"
-                    className="rounded-lg bg-slate-200 px-6 py-2 text-slate-900 font-medium hover:bg-slate-300 transition"
+                    className="rounded-lg bg-slate-200 px-6 py-2 text-slate-900 font-medium hover:bg-slate-300 transition cursor-pointer"
                 >
                     Cancel
                 </button>
@@ -222,7 +222,7 @@ const MarkAttendance = () => {
                     onClick={handleSubmit}
                     type="button"
                     disabled={loading}
-                    className={`rounded-lg px-6 py-2 font-medium transition ${loading ? 'bg-slate-400 text-slate-700 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+                    className={`rounded-lg px-6 py-2 font-medium transition cursor-pointer ${loading ? 'bg-slate-400 text-slate-700 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
                 >
                     {loading ? 'Submitting...' : 'Submit Attendance'}
                 </button>

@@ -83,7 +83,7 @@ const AdminLayout = ({ children }) => {
         <div className="px-4 pb-6">
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-2xl border border-black/20 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:border-opacity-100 hover:bg-white hover:text-slate-900"
+            className="flex w-full items-center gap-3 rounded-2xl border border-black/20 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:border-opacity-100 hover:bg-white hover:text-slate-900 cursor-pointer"
           >
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-rose-500 text-white">🚪</span>
             Logout
@@ -105,7 +105,7 @@ const AdminLayout = ({ children }) => {
           <button
             type="button"
             onClick={handleToggleSidebar}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-black/20 bg-white text-slate-900 transition hover:border-emerald-500 hover:border-opacity-100"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-black/20 bg-white text-slate-900 transition hover:border-emerald-500 hover:border-opacity-100 cursor-pointer"
           >
             ☰
           </button>
@@ -126,7 +126,7 @@ const AdminLayout = ({ children }) => {
             <button
               type="button"
               onClick={handleCloseSidebar}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/20 text-slate-900 transition hover:border-emerald-500 hover:border-opacity-100"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-black/20 text-slate-900 transition hover:border-emerald-500 hover:border-opacity-100 cursor-pointer"
             >
               ✕
             </button>
@@ -159,7 +159,7 @@ const AdminLayout = ({ children }) => {
                 handleLogout()
                 handleCloseSidebar()
               }}
-              className="flex w-full items-center gap-3 rounded-2xl border border-black/20 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:border-opacity-100 hover:bg-white hover:text-slate-900"
+              className="flex w-full items-center gap-3 rounded-2xl border border-black/20 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-500 hover:border-opacity-100 hover:bg-white hover:text-slate-900 cursor-pointer"
             >
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500 text-white">🚪</span>
               Logout

@@ -166,7 +166,7 @@ const UserManagement = () => {
                           <button
                             onClick={() => handleApproveUser(user._id)}
                             disabled={approvingUserId === user._id}
-                            className="inline-flex items-center rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60"
+                            className="inline-flex items-center rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60 cursor-pointer"
                           >
                             {approvingUserId === user._id ? 'Approving...' : 'Approve'}
                           </button>
