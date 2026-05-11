@@ -41,7 +41,9 @@ const getClassAttendance = async (req, res) => {
     try {
         const { classId } = req.params;
 
-        const attendance = await Attendance.find({ classId });
+        const attendance = await Attendance.find({ classId })
+            .populate("records.student", "name email") // populate student details
+            .sort({ date: -1 }); // sort by date descending
 
         return res.status(200).json({
             message: "attendance get successfully",

@@ -36,6 +36,7 @@ const ViewClassAttendance = () => {
                 const attendanceRes = await getClassAttendanceApi(id)
                 const records = attendanceRes.attendance || []
                 setAttendance(records)
+
                 setFilteredAttendance(records)
 
                 toast.success("Attendance records loaded successfully")
